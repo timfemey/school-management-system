@@ -6,6 +6,7 @@ import {
   deleteUser,
   inMemoryPersistence,
   updateProfile,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 
 export default function Home() {
@@ -49,7 +50,14 @@ function Auth() {
               updateProfile(user, {
                 displayName: username,
                 photoURL: photoURL,
-              });
+              })
+                .then(() => {
+                  window.location.replace("/main");
+                })
+                .catch(() => {
+                  deleteUser(user);
+                  alert("Failed to Set Username and PhotoURL, Retry SignUp");
+                });
             }
           })
           .catch(() => {
@@ -58,6 +66,12 @@ function Auth() {
           });
       }
     );
+  }
+
+  function SignIn() {
+    signInWithEmailAndPassword(auth, email, password).then(() => {
+      window.location.replace("/main");
+    });
   }
 
   return (
