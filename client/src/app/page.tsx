@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { auth } from "../config/firebase";
+import { auth, storage } from "../config/firebase";
 import {
   createUserWithEmailAndPassword,
   deleteUser,
@@ -8,6 +8,7 @@ import {
   updateProfile,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default function Home() {
   auth.setPersistence(inMemoryPersistence);
@@ -72,6 +73,29 @@ function Auth() {
     signInWithEmailAndPassword(auth, email, password).then(() => {
       window.location.replace("/main");
     });
+  }
+
+  function uploadPhoto(input: HTMLInputElement) {
+    const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+    const files: FileList | null = input.files;
+
+    if (files && files.length > 0) {
+      const selectedFile: File = files[0]; // Assuming only one file is selected
+      const fileName: string = selectedFile.name;
+
+      if (!allowedExtensions.test(fileName)) {
+        alert("Please select a valid image file (jpg, jpeg or png)");
+        input.value = "";
+      }
+
+      // Firebase storage reference
+      const storageRef = ref(storage, auth.currentUser?.uid + fileName);
+
+      uploadBytes(storageRef, selectedFile).then(async () => {
+        const url = await getDownloadURL(storageRef);
+        setPhotoURL(url);
+      });
+    }
   }
 
   return (
@@ -193,7 +217,12 @@ function Auth() {
 
                 <h2 className="mx-3 text-gray-400">School Profile Photo</h2>
 
-                <input id="dropzone-file" type="file" className="hidden" />
+                <input
+                  id="dropzone-file"
+                  accept="image/*"
+                  type="file"
+                  className="hidden"
+                />
               </label>
             )}
 
