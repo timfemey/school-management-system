@@ -7,6 +7,7 @@ import {
   inMemoryPersistence,
   updateProfile,
   signInWithEmailAndPassword,
+  sendEmailVerification,
 } from "firebase/auth";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
@@ -48,6 +49,7 @@ function Auth() {
               deleteUser(user);
               alert("Failed to Set School and School Title, Retry SignUp");
             } else {
+              sendEmailVerification(user);
               updateProfile(user, {
                 displayName: username,
                 photoURL: photoURL,
