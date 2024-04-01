@@ -28,12 +28,13 @@ function Auth() {
   const [username, setUsername] = useState("");
   const [photoURL, setPhotoURL] = useState("");
   const [school, setSchool] = useState("");
+  const [title, setTitle] = useState("");
 
   function SetSchool(token: string) {
     return fetch("", {
       method: "POST",
       body: JSON.stringify({
-        title: "director",
+        title: title,
         school: school,
         token: token,
       }),
@@ -81,9 +82,9 @@ function Auth() {
     });
   }
 
-  function uploadPhoto(input: HTMLInputElement) {
+  function uploadPhoto(input: FileList | null) {
     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-    const files: FileList | null = input.files;
+    const files: FileList | null = input;
 
     if (files && files.length > 0) {
       const selectedFile: File = files[0]; // Assuming only one file is selected
@@ -91,7 +92,6 @@ function Auth() {
 
       if (!allowedExtensions.test(fileName)) {
         alert("Please select a valid image file (jpg, jpeg or png)");
-        input.value = "";
       }
 
       // Firebase storage reference
@@ -163,6 +163,9 @@ function Auth() {
 
                   <input
                     type="text"
+                    onBlur={({ currentTarget }) =>
+                      setSchool(currentTarget.value)
+                    }
                     className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                     placeholder="School Name"
                   />
@@ -193,6 +196,9 @@ function Auth() {
 
                   <input
                     type="text"
+                    onBlur={({ currentTarget }) =>
+                      setUsername(currentTarget.value)
+                    }
                     className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                     placeholder="Username"
                   />
@@ -228,6 +234,7 @@ function Auth() {
                   accept="image/*"
                   type="file"
                   className="hidden"
+                  onChange={(e) => uploadPhoto(e.currentTarget.files)}
                 />
               </label>
             )}
@@ -252,6 +259,7 @@ function Auth() {
 
               <input
                 type="email"
+                onBlur={({ currentTarget }) => setEmail(currentTarget.value)}
                 className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 placeholder="Email address"
               />
@@ -277,6 +285,7 @@ function Auth() {
 
               <input
                 type="password"
+                onBlur={({ currentTarget }) => setPassword(currentTarget.value)}
                 className="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 placeholder="Password"
               />
@@ -304,7 +313,12 @@ function Auth() {
                     </svg>
                   </span>
 
-                  <select className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40">
+                  <select
+                    onSelect={(e) => {
+                      setTitle(e.currentTarget.value);
+                    }}
+                    className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                  >
                     <option>Director</option>
                     <option>Teacher</option>
                     <option>Student</option>
@@ -315,11 +329,17 @@ function Auth() {
 
             <div className="mt-6">
               {signIn == "signin" ? (
-                <button className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+                <button
+                  onClick={() => SignIn()}
+                  className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                >
                   Sign In
                 </button>
               ) : (
-                <button className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50">
+                <button
+                  onClick={() => SignUp()}
+                  className="w-full px-6 py-3 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-500 rounded-lg hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+                >
                   Sign Up
                 </button>
               )}
