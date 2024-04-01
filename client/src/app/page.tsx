@@ -14,7 +14,11 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 export default function Home() {
   auth.setPersistence(inMemoryPersistence);
 
-  return <></>;
+  return (
+    <>
+      {auth.currentUser == null ? <Auth /> : window.location.replace("/main")}
+    </>
+  );
 }
 
 function Auth() {
