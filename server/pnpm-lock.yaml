@@ -11,6 +11,9 @@ dependencies:
   hyper-express:
     specifier: ^6.14.12
     version: 6.14.12
+  validator:
+    specifier: ^13.11.0
+    version: 13.11.0
   xss:
     specifier: ^1.0.15
     version: 1.0.15
@@ -19,6 +22,9 @@ devDependencies:
   '@types/node':
     specifier: ^20.11.30
     version: 20.11.30
+  '@types/validator':
+    specifier: ^13.11.9
+    version: 13.11.9
 
 packages:
 
@@ -361,6 +367,10 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /@types/validator@13.11.9:
+    resolution: {integrity: sha512-FCTsikRozryfayPuiI46QzH3fnrOoctTjvOYZkho9BTFLCOZ2rgZJHMOVgCOfttjPJcgOx52EpkY0CMfy87MIw==}
+    dev: true
 
   /abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -1267,6 +1277,11 @@ packages:
   /uuid@9.0.1:
     resolution: {integrity: sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==}
     hasBin: true
+    dev: false
+
+  /validator@13.11.0:
+    resolution: {integrity: sha512-Ii+sehpSfZy+At5nPdnyMhx78fEoPDkR2XW/zimHEL3MyGJQOCQ7WeP20jPYRz7ZCpcKLB21NxuXHF3bxjStBQ==}
+    engines: {node: '>= 0.10'}
     dev: false
 
   /webidl-conversions@3.0.1:
