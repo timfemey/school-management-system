@@ -2,7 +2,7 @@ import { firestore } from "../config/firebase.js";
 
 export async function checkIfSchoolIdHasBeenUsed(id: string) {
     try {
-        const doc = await firestore.collection("requests").doc(id).get()
+        const doc = await firestore.collection("schools").doc(id).get()
         const exists = doc.exists
         return exists;
     } catch (error) {
