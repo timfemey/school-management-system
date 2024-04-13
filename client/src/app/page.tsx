@@ -1,14 +1,7 @@
 "use client";
 import { useState } from "react";
 import { auth, storage } from "../config/firebase";
-import {
-  createUserWithEmailAndPassword,
-  deleteUser,
-  inMemoryPersistence,
-  updateProfile,
-  signInWithEmailAndPassword,
-  sendEmailVerification,
-} from "firebase/auth";
+import { inMemoryPersistence, signInWithEmailAndPassword } from "firebase/auth";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default function Home() {
@@ -28,15 +21,14 @@ function Auth() {
   const [username, setUsername] = useState("");
   const [photoURL, setPhotoURL] = useState("");
   const [school, setSchool] = useState("");
+  const [schoolID, setSchoolID] = useState("");
   const [title, setTitle] = useState("");
 
-  function SetSchool(token: string) {
+  function checkIfSchoolIDisUnique(token: string) {
     return fetch("", {
       method: "POST",
       body: JSON.stringify({
-        title: title,
-        school: school,
-        token: token,
+        school_id: schoolID,
       }),
       headers: {
         Accept: "application/json",
@@ -45,36 +37,7 @@ function Auth() {
     });
   }
 
-  function SignUp() {
-    createUserWithEmailAndPassword(auth, email, password).then(
-      async ({ user }) => {
-        SetSchool((await auth.currentUser?.getIdToken()) as string)
-          .then((res) => {
-            if (res.status != 200) {
-              deleteUser(user);
-              alert("Failed to Set School and School Title, Retry SignUp");
-            } else {
-              sendEmailVerification(user);
-              updateProfile(user, {
-                displayName: username,
-                photoURL: photoURL,
-              })
-                .then(() => {
-                  window.location.replace("/main");
-                })
-                .catch(() => {
-                  deleteUser(user);
-                  alert("Failed to Set Username and PhotoURL, Retry SignUp");
-                });
-            }
-          })
-          .catch(() => {
-            deleteUser(user);
-            alert("Failed to Set School and School Title,Retry SignUp");
-          });
-      }
-    );
-  }
+  function SignUp() {}
 
   function SignIn() {
     signInWithEmailAndPassword(auth, email, password).then(() => {
@@ -172,6 +135,37 @@ function Auth() {
                 </>
               )}
             </div>
+
+            <div className="relative flex items-center mt-8">
+              <span className="absolute">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-6 h-6 mx-3 text-gray-300 dark:text-gray-500"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                  />
+                </svg>
+              </span>
+
+              <input
+                type="text"
+                onBlur={({ currentTarget }) => setSchoolID(currentTarget.value)}
+                className="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 dark:bg-gray-900 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                placeholder={
+                  signIn == "signup"
+                    ? "Give a Unique School ID for your School"
+                    : "School ID"
+                }
+              />
+            </div>
+
             <div className="relative flex items-center mt-8">
               {signIn == "signin" ? (
                 <></>
