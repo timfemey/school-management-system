@@ -37,7 +37,30 @@ function Auth() {
     });
   }
 
-  function SignUp() {}
+  function SignUp() {
+    fetch("", {
+      method: "POST",
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        username: username,
+        school: school,
+        type: title,
+        dpLink: photoURL,
+        schoolId: schoolID,
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }).then(async (res) => {
+      const resp = await res.json();
+      if (resp.status) {
+      } else {
+        //Action if Sign Up returns false status
+      }
+    });
+  }
 
   function SignIn() {
     signInWithEmailAndPassword(auth, email, password).then(() => {
@@ -102,6 +125,7 @@ function Auth() {
               </a>
             </div>
 
+            {/* School Name Input Element */}
             <div className="relative flex items-center mt-8">
               {signIn == "signin" ? (
                 <></>
@@ -136,6 +160,7 @@ function Auth() {
               )}
             </div>
 
+            {/* School ID Input Element */}
             <div className="relative flex items-center mt-8">
               <span className="absolute">
                 <svg
@@ -144,7 +169,7 @@ function Auth() {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
-                  stroke-width="2"
+                  strokeWidth="2"
                 >
                   <path
                     stroke-linecap="round"
@@ -166,6 +191,7 @@ function Auth() {
               />
             </div>
 
+            {/* UserName Input Element */}
             <div className="relative flex items-center mt-8">
               {signIn == "signin" ? (
                 <></>
@@ -199,6 +225,8 @@ function Auth() {
                 </>
               )}
             </div>
+
+            {/* Profile Picture Input Element */}
             {signIn == "signin" ? (
               <></>
             ) : (
@@ -233,7 +261,8 @@ function Auth() {
               </label>
             )}
 
-            <div className="relative flex items-center mt-6">
+            {/* Email Field Input Element */}
+            <div className="relative flex items-center mt-4">
               <span className="absolute">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -259,6 +288,7 @@ function Auth() {
               />
             </div>
 
+            {/* Password Field Input Element */}
             <div className="relative flex items-center mt-4">
               <span className="absolute">
                 <svg
@@ -285,6 +315,7 @@ function Auth() {
               />
             </div>
 
+            {/* TItle/Type of User Input Element */}
             <div className="relative flex items-center mt-6">
               {signIn == "signin" ? (
                 <></>
@@ -321,6 +352,7 @@ function Auth() {
               )}
             </div>
 
+            {/* Sign In / Sign Up buttons */}
             <div className="mt-6">
               {signIn == "signin" ? (
                 <button
