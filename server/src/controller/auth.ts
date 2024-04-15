@@ -160,3 +160,21 @@ export async function SignUp(req: Request, res: Response) {
     }
 }
 
+export async function verifyUID(uid: string, token?: string) {
+    try {
+        if (token != undefined) {
+            const res = await auth.verifyIdToken(token, true);
+            if (res.uid != uid) return { validUID: false, user: null };
+            const user = await auth.getUser(res.uid)
+            return { user: user, validUID: true };
+        }
+        const res = await auth.getUser(uid);
+        if (res.uid) return { user: res, validUID: true };
+        return { validUID: false, user: null };
+    } catch (error) {
+        console.error(error);
+        return { validUID: false, user: null };
+    }
+}
+
+
