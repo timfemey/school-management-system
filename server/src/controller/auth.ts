@@ -1,5 +1,5 @@
 import { Request, Response } from "hyper-express";
-import { auth, firestore } from "../config/firebase.js";
+import { auth, firestore, timestamp } from "../config/firebase.js";
 import validator from "validator";
 import { checkIfSchoolIdHasBeenUsed } from "../helper/school_ID.js";
 
@@ -85,7 +85,7 @@ export async function SignUp(req: Request, res: Response) {
                         owner_uid: user.uid,
                         owner_email: user.email,
                         school_name: school,
-                        school_dp: dpLink,
+                        timestamp: timestamp.now()
                     });
 
                     return res.json({ message: "Successfully Created Account", status: true })
@@ -122,6 +122,12 @@ export async function SignUp(req: Request, res: Response) {
                         school_id: schoolId,
                     });
 
+                    firestore.collection("schools").doc(schoolId).collection("teachers").doc(user.uid).set({
+                        email: email,
+                        uid: user.uid,
+                        timestamp: timestamp.now()
+                    })
+
                     return res.json({ message: "Successfully Created Account", status: true })
 
                 });
@@ -134,7 +140,7 @@ export async function SignUp(req: Request, res: Response) {
         const schoolCheck = await checkIfSchoolIdHasBeenUsed(schoolId);
         if (schoolCheck == false) {
             return res.json({
-                message: "This School ID is not valid",
+                message: "This School ID is not valid and has been used already",
                 status: false,
             });
         } else {
@@ -151,6 +157,12 @@ export async function SignUp(req: Request, res: Response) {
                         type: "student",
                         school_id: schoolId,
                     });
+
+                    firestore.collection("schools").doc(schoolId).collection("students").doc(user.uid).set({
+                        email: email,
+                        uid: user.uid,
+                        timestamp: timestamp.now()
+                    })
 
 
                     return res.json({ message: "Successfully Created Account", status: true })
@@ -177,4 +189,13 @@ export async function verifyUID(uid: string, token?: string) {
     }
 }
 
-
+export async function verifyToken(token: string) {
+    try {
+        const res = await auth.verifyIdToken(token, true);
+        if (res.uid) return res.uid;
+        return "";
+    } catch (error) {
+        console.error(error);
+        return "";
+    }
+}
