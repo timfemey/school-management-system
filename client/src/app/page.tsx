@@ -23,21 +23,10 @@ function Auth() {
   const [school, setSchool] = useState("");
   const [schoolID, setSchoolID] = useState("");
   const [title, setTitle] = useState("");
-
-  function checkIfSchoolIDisUnique(token: string) {
-    return fetch("", {
-      method: "POST",
-      body: JSON.stringify({
-        school_id: schoolID,
-      }),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
-  }
+  const [file, setFile] = useState<FileList | null>(null);
 
   function SignUp() {
+    uploadPhoto();
     fetch("", {
       method: "POST",
       body: JSON.stringify({
@@ -68,9 +57,9 @@ function Auth() {
     });
   }
 
-  function uploadPhoto(input: FileList | null) {
+  function uploadPhoto() {
     const allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
-    const files: FileList | null = input;
+    const files: FileList | null = file;
 
     if (files && files.length > 0) {
       const selectedFile: File = files[0]; // Assuming only one file is selected
@@ -256,7 +245,7 @@ function Auth() {
                   accept="image/*"
                   type="file"
                   className="hidden"
-                  onChange={(e) => uploadPhoto(e.currentTarget.files)}
+                  onChange={(e) => setFile(e.currentTarget.files)}
                 />
               </label>
             )}
